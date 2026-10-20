@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Curso de Arduino para Docentes de Escuela Técnica (Ciclo Básico 1.º a 3.º año). Plataforma interactiva con seguimiento de progreso y planificaciones guardadas localmente." />
+  <title>Arduino para Docentes de Escuela Técnica · Ciclo Básico</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%99%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  <style>
+/* =========================================================
+   Curso de Arduino para Docentes
+   Hoja de estilos — CSS3 puro (sin dependencias externas)
+   ========================================================= */
+
+/* ---------- Tokens / Tema ---------- */
+:root {
+  --arduino: #00979d;
+  --arduino-dark: #007a7f;
+  --arduino-soft: rgba(0, 151, 157, 0.12);
+
+  --bg: #eef2f6;
+  --surface: #ffffff;
+  --surface-2: #f6f8fb;
+  --surface-3: #eef1f6;
+  --text: #16202b;
+  --text-soft: #5a6a7a;
+  --text-faint: #8797a7;
+  --border: #dde4ec;
+  --border-strong: #c6d0db;
+
+  --success: #1f9d55;
+  --success-soft: rgba(31, 157, 85, 0.14);
+  --warn: #d9822b;
+  --warn-soft: rgba(217, 130, 43, 0.14);
+  --danger: #d64545;
+  --danger-soft: rgba(214, 69, 69, 0.12);
+  --info: #2f6fd0;
+  --info-soft: rgba(47, 111, 208, 0.12);
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow-sm: 0 1px 2px rgba(16, 32, 48, .06), 0 1px 3px rgba(16, 32, 48, .05);
+  --shadow-md: 0 6px 20px rgba(16, 32, 48, .08);
+  --shadow-lg: 0 18px 48px rgba(16, 32, 48, .16);
+
+  --sidebar-w: 332px;
+  --topbar-h: 64px;
+  --mono: "SFMono-Regular", "JetBrains Mono", "Fira Code", Consolas, "Courier New", monospace;
+  --sans: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[data-theme="dark"] {
+  --bg: #0e1620;
+  --surface: #16202c;
+  --surface-2: #1b2734;
+  --surface-3: #223040;
+  --text: #e8eef5;
+  --text-soft: #a6b6c7;
+  --text-faint: #7c8da3;
+  --border: #26333f;
+  --border-strong: #33465a;
+  --arduino-soft: rgba(0, 151, 157, 0.18);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, .4);
+  --shadow-lg: 0 22px 56px rgba(0, 0, 0, .55);
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  transition: background .25s ease, color .25s ease;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 .5em; font-weight: 700; letter-spacing: -.01em; }
+p { margin: 0 0 1em; }
+a { color: var(--arduino-dark); }
+img { max-width: 100%; }
+code { font-family: var(--mono); }
+
+:focus-visible {
+  outline: 3px solid var(--arduino);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 1000;
+  background: var(--arduino); color: #fff; padding: 10px 16px;
+  border-radius: 0 0 8px 8px; text-decoration: none; font-weight: 600;
+  transition: top .2s ease;
+}
+.skip-link:focus { top: 0; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  --btn-bg: var(--surface);
+  --btn-fg: var(--text);
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  font: inherit; font-weight: 600; cursor: pointer;
+  padding: .68rem 1.15rem; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--btn-bg); color: var(--btn-fg);
+  transition: transform .12s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.btn:active { transform: translateY(0); }
+.btn--primary { --btn-bg: var(--arduino); --btn-fg: #fff; border-color: var(--arduino); }
+.btn--primary:hover { --btn-bg: var(--arduino-dark); }
+.btn--success { --btn-bg: var(--success); --btn-fg: #fff; border-color: var(--success); }
+.btn--ghost { --btn-bg: transparent; border-color: var(--border-strong); }
+.btn--block { width: 100%; }
+.btn--lg { padding: .85rem 1.4rem; font-size: 1.02rem; }
+.btn--done { --btn-bg: var(--success-soft); --btn-fg: var(--success); border-color: var(--success); }
+
+.icon-btn {
+  display: inline-grid; place-items: center;
+  width: 42px; height: 42px; padding: 0;
+  border-radius: 11px; border: 1px solid transparent;
+  background: transparent; color: var(--text-soft); cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s, transform .12s;
+}
+.icon-btn:hover { background: var(--surface-3); color: var(--text); }
+.icon-btn:active { transform: scale(.94); }
+.icon-btn--danger:hover { background: var(--danger-soft); color: var(--danger); }
+
+/* ---------- Barra superior ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 60;
+  height: var(--topbar-h);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: 0 1rem;
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar__left, .topbar__right { display: flex; align-items: center; gap: .5rem; }
+.brand { display: flex; align-items: center; gap: .65rem; }
+.brand__logo {
+  display: grid; place-items: center; width: 42px; height: 42px;
+  border-radius: 12px; color: #fff;
+  background: linear-gradient(135deg, var(--arduino), #00c2c9);
+  box-shadow: var(--shadow-sm);
+}
+.brand__text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand__text strong { font-size: 1.02rem; }
+.brand__text small { color: var(--text-faint); font-size: .78rem; }
+
+.topbar-progress { position: relative; display: grid; place-items: center; margin-right: .25rem; }
+.ring { transform: rotate(-90deg); }
+.ring__bg { fill: none; stroke: var(--border); stroke-width: 4; }
+.ring__value {
+  fill: none; stroke: var(--arduino); stroke-width: 4; stroke-linecap: round;
+  stroke-dasharray: 100.53; stroke-dashoffset: 100.53;
+  transition: stroke-dashoffset .6s cubic-bezier(.22,.61,.36,1);
+}
+.topbar-progress__text {
+  position: absolute; font-size: .68rem; font-weight: 700; color: var(--text-soft);
+}
+.icon-moon { display: none; }
+html[data-theme="dark"] .icon-sun { display: none; }
+html[data-theme="dark"] .icon-moon { display: block; }
+
+/* ---------- Layout ---------- */
+.layout { display: flex; align-items: flex-start; min-height: calc(100vh - var(--topbar-h)); }
+
+.sidebar {
+  flex: 0 0 var(--sidebar-w); width: var(--sidebar-w);
+  height: calc(100vh - var(--topbar-h));
+  position: sticky; top: var(--topbar-h);
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+  transition: flex-basis .3s ease, width .3s ease, opacity .25s ease;
+}
+.sidebar__inner { height: 100%; overflow-y: auto; padding: 1rem 1rem 3rem; }
+
+body.sidebar-collapsed .sidebar { flex-basis: 0; width: 0; opacity: 0; pointer-events: none; }
+
+/* ---------- Tarjeta de progreso ---------- */
+.progress-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.progress-card__head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.progress-card__head h2 { font-size: .95rem; margin: 0; text-transform: uppercase; letter-spacing: .06em; color: var(--text-soft); }
+.badge {
+  background: var(--arduino-soft); color: var(--arduino-dark);
+  font-weight: 700; font-size: .82rem; padding: .2rem .6rem; border-radius: 999px;
+}
+html[data-theme="dark"] .badge { color: #4fd6dc; }
+.progress-bar {
+  height: 9px; border-radius: 999px; background: var(--surface-3);
+  overflow: hidden; margin: .8rem 0 .6rem;
+}
+.progress-bar__fill {
+  display: block; height: 100%; width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--arduino), #22c3b8);
+  transition: width .6s cubic-bezier(.22,.61,.36,1);
+}
+.progress-card__meta { font-size: .82rem; color: var(--text-soft); margin: 0 0 .85rem; }
+.progress-card__meta strong { color: var(--text); }
+
+/* ---------- Árbol del curso ---------- */
+.course-tree { display: flex; flex-direction: column; gap: .35rem; }
+.module { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.module__head {
+  display: flex; align-items: center; gap: .6rem; width: 100%;
+  padding: .8rem .85rem; border: 0; cursor: pointer; text-align: left;
+  background: var(--surface); color: var(--text); font: inherit;
+  transition: background .18s;
+}
+.module__head:hover { background: var(--surface-2); }
+.module__index {
+  flex: none; width: 26px; height: 26px; border-radius: 8px;
+  display: grid; place-items: center; font-size: .8rem; font-weight: 700;
+  background: var(--arduino-soft); color: var(--arduino-dark);
+}
+html[data-theme="dark"] .module__index { color: #4fd6dc; }
+.module__titles { flex: 1; min-width: 0; }
+.module__title { display: block; font-size: .9rem; font-weight: 600; }
+.module__sub { display: block; font-size: .74rem; color: var(--text-faint); }
+.module__chevron { flex: none; color: var(--text-faint); transition: transform .25s ease; }
+.module[data-open="false"] .module__chevron { transform: rotate(-90deg); }
+.module__body {
+  display: grid; grid-template-rows: 1fr; transition: grid-template-rows .28s ease;
+}
+.module[data-open="false"] .module__body { grid-template-rows: 0fr; }
+.module__lessons { overflow: hidden; list-style: none; margin: 0; padding: 0 .5rem .5rem; }
+.module__lessons li { margin: 0; }
+
+.lesson-link {
+  display: flex; align-items: center; gap: .6rem; width: 100%;
+  padding: .55rem .6rem; border-radius: var(--radius-sm);
+  border: 1px solid transparent; background: transparent;
+  color: var(--text-soft); font: inherit; font-size: .86rem; text-align: left; cursor: pointer;
+  transition: background .16s, color .16s, border-color .16s;
+}
+.lesson-link:hover { background: var(--surface-2); color: var(--text); }
+.lesson-link.is-active { background: var(--arduino-soft); color: var(--text); border-color: color-mix(in srgb, var(--arduino) 45%, transparent); font-weight: 600; }
+.lesson-link__status {
+  flex: none; width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center; border: 2px solid var(--border-strong);
+  color: transparent; font-size: 12px;
+}
+.lesson-link.is-done .lesson-link__status { background: var(--success); border-color: var(--success); color: #fff; }
+.lesson-link.is-current .lesson-link__status { border-color: var(--warn); }
+.lesson-link.is-current .lesson-link__status::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--warn); }
+.lesson-link__num { color: var(--text-faint); font-variant-numeric: tabular-nums; font-size: .78rem; }
+.lesson-link__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lesson-link__check { display: none; }
+.lesson-link.is-done .lesson-link__check { display: block; }
+.lesson-link.is-done .lesson-link__status::after { display: none; }
+
+/* ---------- Contenido ---------- */
+.content { flex: 1; min-width: 0; padding: 2rem clamp(1rem, 4vw, 3rem) 5rem; }
+.lesson { max-width: 860px; margin: 0 auto; animation: fadeUp .35s ease both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.lesson__breadcrumb { font-size: .82rem; color: var(--text-faint); margin-bottom: .6rem; display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+.lesson__breadcrumb span { color: var(--border-strong); }
+.lesson__eyebrow { color: var(--arduino-dark); font-weight: 700; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+html[data-theme="dark"] .lesson__eyebrow { color: #4fd6dc; }
+.lesson__title { font-size: clamp(1.55rem, 3.4vw, 2.15rem); margin: .15rem 0 .8rem; }
+.lesson__meta { display: flex; flex-wrap: wrap; gap: .5rem 1rem; color: var(--text-soft); font-size: .86rem; margin-bottom: 1.4rem; }
+.lesson__meta .chip { display: inline-flex; align-items: center; gap: .4rem; background: var(--surface); border: 1px solid var(--border); padding: .3rem .7rem; border-radius: 999px; }
+.lesson__status-chip.is-done { background: var(--success-soft); border-color: var(--success); color: var(--success); font-weight: 600; }
+
+.lesson__body { font-size: 1.02rem; }
+.lesson__body h3 { font-size: 1.28rem; margin: 1.8rem 0 .6rem; }
+.lesson__body h4 { font-size: 1.06rem; margin: 1.4rem 0 .5rem; }
+.lesson__body ul, .lesson__body ol { padding-left: 1.3rem; margin: 0 0 1.1rem; }
+.lesson__body li { margin-bottom: .4rem; }
+.lesson__body strong { color: var(--text); }
+
+/* Bloques especiales */
+.callout {
+  display: flex; gap: .8rem; padding: 1rem 1.1rem; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--surface-2);
+  border-left: 4px solid var(--info); margin: 1.3rem 0;
+}
+.callout__icon { flex: none; width: 22px; height: 22px; color: var(--info); }
+.callout__title { font-weight: 700; display: block; margin-bottom: .15rem; }
+.callout p:last-child { margin-bottom: 0; }
+.callout--tip { border-left-color: var(--success); }
+.callout--tip .callout__icon { color: var(--success); }
+.callout--tip { background: var(--success-soft); }
+.callout--warn { border-left-color: var(--warn); background: var(--warn-soft); }
+.callout--warn .callout__icon { color: var(--warn); }
+.callout--info { background: var(--info-soft); }
+
+/* Tablas */
+.table-wrap { overflow-x: auto; margin: 1.2rem 0; border: 1px solid var(--border); border-radius: var(--radius); }
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+thead th {
+  background: var(--surface-3); text-align: left; padding: .7rem .9rem;
+  font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-soft);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+tbody td { padding: .65rem .9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:nth-child(even) { background: var(--surface-2); }
+
+/* Bloques de código */
+.code-block {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; margin: 1.3rem 0; background: #0d1b26;
+  box-shadow: var(--shadow-sm);
+}
+.code-block__head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .75rem; padding: .5rem .75rem .5rem 1rem;
+  background: #0a1621; border-bottom: 1px solid #1d2f3d;
+}
+.code-block__file { display: flex; align-items: center; gap: .5rem; color: #8fb3c7; font-family: var(--mono); font-size: .8rem; }
+.code-block__dots { display: inline-flex; gap: .3rem; margin-right: .35rem; }
+.code-block__dots i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.code-block__dots i:nth-child(1) { background: #ff5f57; }
+.code-block__dots i:nth-child(2) { background: #febc2e; }
+.code-block__dots i:nth-child(3) { background: #28c840; }
+.code-block__copy {
+  display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
+  background: #16283a; color: #cfe6f3; border: 1px solid #24455c;
+  font: inherit; font-size: .78rem; font-weight: 600; padding: .35rem .7rem; border-radius: 7px;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.code-block__copy:hover { background: #1d3b52; }
+.code-block__copy.is-copied { background: var(--success); border-color: var(--success); color: #fff; }
+.code-block pre { margin: 0; padding: 1rem 1.1rem; overflow-x: auto; }
+.code-block code { font-size: .855rem; line-height: 1.6; color: #d5e5f0; white-space: pre; }
+.tok-com { color: #6b8ba0; font-style: italic; }
+.tok-str { color: #f0b37e; }
+.tok-num { color: #d9a3ff; }
+.tok-kw { color: #57c7ff; font-weight: 600; }
+.tok-pre { color: #7ee0c9; }
+.tok-fn { color: #ffd479; }
+
+/* Apuntes del docente */
+.notes {
+  margin-top: 2.2rem; padding: 1.2rem; border-radius: var(--radius);
+  border: 1px dashed var(--border-strong); background: var(--surface-2);
+}
+.notes__head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .6rem; flex-wrap: wrap; }
+.notes__head h3 { margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: .5rem; }
+.notes__hint { font-size: .78rem; color: var(--text-faint); }
+.notes textarea {
+  width: 100%; min-height: 140px; resize: vertical;
+  font: inherit; font-size: .95rem; line-height: 1.6; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: .85rem .95rem; transition: border-color .2s, box-shadow .2s;
+}
+.notes textarea:focus { border-color: var(--arduino); box-shadow: 0 0 0 3px var(--arduino-soft); outline: none; }
+.notes__status { font-size: .78rem; color: var(--text-faint); margin: .5rem 0 0; display: flex; align-items: center; gap: .4rem; min-height: 1.1em; }
+.notes__status.is-saved { color: var(--success); }
+
+/* Pie de lección / acciones */
+.lesson__actions {
+  position: sticky; bottom: 0; z-index: 20;
+  margin-top: 2rem; padding: 1rem 0;
+  display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; justify-content: space-between;
+  background: linear-gradient(to top, var(--bg) 65%, transparent);
+}
+.lesson__nav { display: flex; gap: .6rem; }
+
+/* Pantalla de inicio */
+.hero { max-width: 900px; margin: 0 auto; }
+.hero__panel {
+  border-radius: 22px; padding: clamp(1.5rem, 4vw, 3rem); color: #eafcff;
+  background: radial-gradient(120% 140% at 0% 0%, #00979d 0%, #01474d 55%, #062b33 100%);
+  box-shadow: var(--shadow-lg); margin-bottom: 2rem;
+}
+.hero__panel h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); margin-bottom: .6rem; }
+.hero__panel p { color: #c3e9ec; max-width: 60ch; }
+.hero__actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.4rem; }
+.hero__actions .btn--ghost { --btn-fg: #eafcff; border-color: rgba(255,255,255,.4); }
+.hero__actions .btn--primary { --btn-bg: #fff; --btn-fg: #01474d; border-color: #fff; }
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.feature {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.2rem; box-shadow: var(--shadow-sm);
+}
+.feature__icon {
+  width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; margin-bottom: .7rem;
+  background: var(--arduino-soft); color: var(--arduino-dark);
+}
+html[data-theme="dark"] .feature__icon { color: #4fd6dc; }
+.feature h3 { font-size: 1rem; margin-bottom: .3rem; }
+.feature p { font-size: .9rem; color: var(--text-soft); margin: 0; }
+
+/* ---------- Overlay + toasts ---------- */
+.overlay {
+  position: fixed; inset: 0; z-index: 55;
+  background: rgba(8, 16, 24, .5); backdrop-filter: blur(2px);
+  opacity: 0; transition: opacity .25s ease;
+}
+.overlay.is-visible { opacity: 1; }
+
+.toast-region {
+  position: fixed; z-index: 200; right: 1rem; bottom: 1rem;
+  display: flex; flex-direction: column; gap: .6rem; max-width: min(92vw, 380px);
+}
+.toast {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .75rem 1rem; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: var(--shadow-md); color: var(--text); font-size: .9rem;
+  animation: toastIn .28s ease both;
+}
+.toast--ok { border-left: 4px solid var(--success); }
+.toast--info { border-left: 4px solid var(--info); }
+.toast--warn { border-left: 4px solid var(--warn); }
+.toast.is-leaving { animation: toastOut .25s ease both; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+@keyframes toastOut { to { opacity: 0; transform: translateX(20px); } }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .sidebar {
+    position: fixed; top: var(--topbar-h); left: 0; z-index: 58;
+    height: calc(100vh - var(--topbar-h));
+    transform: translateX(-100%); opacity: 1;
+    box-shadow: var(--shadow-lg);
+    transition: transform .3s ease;
+  }
+  body.sidebar-open .sidebar { transform: translateX(0); }
+  .content { padding: 1.4rem 1rem 4rem; }
+  .brand__text small { display: none; }
+}
+@media (max-width: 560px) {
+  :root { --topbar-h: 58px; }
+  .brand__logo { width: 36px; height: 36px; }
+  .brand__text strong { font-size: .92rem; }
+  .topbar-progress { display: none; }
+  .lesson__actions { justify-content: stretch; }
+  .lesson__actions .btn { flex: 1; }
+  .lesson__nav { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+@media print {
+  .topbar, .sidebar, .overlay, .toast-region, .lesson__actions { display: none !important; }
+  .content { padding: 0; }
+  body { background: #fff; }
+}
+
+/* =========================================================
+   Extensiones ETP — Escuela Técnica (1.º a 3.º año)
+   ========================================================= */
+
+/* Etiqueta de año / especialidad */
+.year-badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  padding: .2rem .55rem; border-radius: 999px; white-space: nowrap;
+  background: var(--info-soft); color: var(--info); border: 1px solid color-mix(in srgb, var(--info) 40%, transparent);
+}
+.year-badge--1 { background: rgba(47,111,208,.14); color: #2f6fd0; border-color: rgba(47,111,208,.4); }
+.year-badge--2 { background: rgba(217,130,43,.16); color: #b96a17; border-color: rgba(217,130,43,.45); }
+.year-badge--3 { background: rgba(31,157,85,.16); color: #178a49; border-color: rgba(31,157,85,.45); }
+html[data-theme="dark"] .year-badge--1 { color: #7fb0ff; }
+html[data-theme="dark"] .year-badge--2 { color: #f0ab5a; }
+html[data-theme="dark"] .year-badge--3 { color: #57d68f; }
+
+/* Filtro por año en la barra lateral */
+.year-filter { display: flex; gap: .35rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.year-filter__btn {
+  flex: 1; min-width: 62px; cursor: pointer; font: inherit; font-size: .8rem; font-weight: 600;
+  padding: .45rem .4rem; border-radius: 9px; border: 1px solid var(--border-strong);
+  background: var(--surface); color: var(--text-soft); transition: background .18s, color .18s, border-color .18s;
+}
+.year-filter__btn:hover { background: var(--surface-2); color: var(--text); }
+.year-filter__btn.is-active { background: var(--arduino); border-color: var(--arduino); color: #fff; }
+.module.is-hidden { display: none; }
+
+/* Rejilla de encuadre didáctico ETP */
+.etp-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem; margin: 1.4rem 0;
+}
+.etp-card {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1rem 1.1rem;
+}
+.etp-card__head { display: flex; align-items: center; gap: .5rem; margin-bottom: .6rem; }
+.etp-card__head svg { color: var(--arduino-dark); flex: none; }
+html[data-theme="dark"] .etp-card__head svg { color: #4fd6dc; }
+.etp-card__head h4 { margin: 0; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-soft); }
+.etp-card ul { margin: 0; padding-left: 1.1rem; font-size: .92rem; }
+.etp-card ul li { margin-bottom: .3rem; }
+.etp-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+.etp-tag {
+  font-size: .8rem; font-weight: 600; padding: .25rem .6rem; border-radius: 999px;
+  background: var(--arduino-soft); color: var(--arduino-dark);
+}
+html[data-theme="dark"] .etp-tag { color: #4fd6dc; }
+
+/* Secciones de trabajo del docente */
+.teacher-workspace { margin-top: 2.4rem; display: grid; gap: 1.1rem; }
+.teacher-workspace .section-label {
+  display: flex; align-items: center; gap: .5rem; font-size: .95rem; font-weight: 700; margin-bottom: .4rem;
+}
+.teacher-workspace .section-label svg { color: var(--arduino-dark); }
+html[data-theme="dark"] .teacher-workspace .section-label svg { color: #4fd6dc; }
+
+.field { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; }
+.field textarea {
+  width: 100%; min-height: 120px; resize: vertical;
+  font: inherit; font-size: .95rem; line-height: 1.6; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: .8rem .9rem; transition: border-color .2s, box-shadow .2s;
+}
+.field textarea:focus { border-color: var(--arduino); box-shadow: 0 0 0 3px var(--arduino-soft); outline: none; }
+.field__hint { font-size: .78rem; color: var(--text-faint); margin: .45rem 0 0; display: flex; align-items: center; gap: .4rem; min-height: 1.1em; }
+.field__hint.is-saved { color: var(--success); }
+
+/* Barra de avance por año */
+.year-progress { display: grid; gap: .4rem; margin-top: .2rem; }
+.year-progress__row { display: flex; align-items: center; gap: .6rem; font-size: .78rem; color: var(--text-soft); }
+.year-progress__row b { width: 48px; flex: none; }
+.year-progress__bar { flex: 1; height: 6px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+.year-progress__bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--arduino), #22c3b8); border-radius: 999px; transition: width .5s ease; }
+
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <!-- ===== Barra superior ===== -->
+  <header class="topbar">
+    <div class="topbar__left">
+      <button id="menuToggle" class="icon-btn" type="button" aria-label="Mostrar u ocultar menú de módulos" aria-expanded="true" aria-controls="sidebar">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="brand">
+        <span class="brand__logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="24" height="24"><rect x="5" y="5" width="14" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <div class="brand__text">
+          <strong>Arduino para Docentes · Escuela Técnica</strong>
+          <small>Ciclo Básico · 1.º a 3.º año</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="topbar__right">
+      <div class="topbar-progress" title="Avance general del curso">
+        <svg class="ring" viewBox="0 0 42 42" width="42" height="42" aria-hidden="true">
+          <circle class="ring__bg" cx="21" cy="21" r="16" />
+          <circle id="ringValue" class="ring__value" cx="21" cy="21" r="16" />
+        </svg>
+        <span id="ringText" class="topbar-progress__text" aria-live="polite">0%</span>
+      </div>
+      <button id="themeToggle" class="icon-btn" type="button" aria-label="Cambiar a tema claro/oscuro" title="Cambiar tema">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="resetBtn" class="icon-btn icon-btn--danger" type="button" aria-label="Reiniciar todo el progreso del curso" title="Reiniciar progreso">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 3v5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- ===== Barra lateral ===== -->
+    <aside id="sidebar" class="sidebar" aria-label="Módulos y lecciones del curso">
+      <div class="sidebar__inner">
+        <section class="progress-card" aria-label="Progreso general">
+          <div class="progress-card__head">
+            <h2>Tu avance</h2>
+            <span id="progressPercent" class="badge">0%</span>
+          </div>
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="progressLabel">
+            <span id="progressFill" class="progress-bar__fill"></span>
+          </div>
+          <p id="progressLabel" class="progress-card__meta">
+            <strong id="doneCount">0</strong> de <strong id="totalCount">0</strong> lecciones completadas
+          </p>
+          <div id="yearProgress" class="year-progress" aria-hidden="true"></div>
+          <button id="continueBtn" class="btn btn--primary btn--block" type="button" style="margin-top:.9rem">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>
+            <span id="continueText">Comenzar el curso</span>
+          </button>
+        </section>
+
+        <div class="year-filter" role="group" aria-label="Filtrar por año">
+          <button class="year-filter__btn is-active" type="button" data-year="all">Todos</button>
+          <button class="year-filter__btn" type="button" data-year="1">1.º año</button>
+          <button class="year-filter__btn" type="button" data-year="2">2.º año</button>
+          <button class="year-filter__btn" type="button" data-year="3">3.º año</button>
+        </div>
+
+        <nav class="course-tree" aria-label="Índice del curso">
+          <div id="moduleList"></div>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- ===== Contenido central ===== -->
+    <main id="contenido" class="content" tabindex="-1">
+      <div id="lessonView"></div>
+    </main>
+
+    <div id="overlay" class="overlay" hidden></div>
+  </div>
+
+  <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+/* =========================================================
+   Curso de Arduino para Docentes de Escuela Técnica
+   Ciclo Básico · 1.º a 3.º año
+   app.js — 100% cliente · persistencia en localStorage
+   ========================================================= */
+'use strict';
+
+/* ---------------------------------------------------------
+   1) DATOS DEL CURSO (enfoque Didáctica ETP)
+   Cada lección aporta:
+     - year: 1 | 2 | 3
+     - area: taller o espacio curricular con el que articula
+     - objectives: resultados de aprendizaje
+     - competencies: capacidades / competencias del ciclo básico
+     - materials: recursos necesarios
+     - blocks: contenido dinámico (p | h3 | h4 | ul | ol | code | callout | table)
+   --------------------------------------------------------- */
+const COURSE = {
+  title: 'Arduino para Docentes de Escuela Técnica',
+  subtitle: 'Ciclo Básico · 1.º a 3.º año',
+  modules: [
+    {
+      id: 'm1',
+      num: 1,
+      year: 1,
+      title: 'Fundamentos y Robótica Educativa en el Taller',
+      subtitle: '1.º año · Primer contacto con la electrónica',
+      area: 'Taller de Electrónica · Introducción',
+      lessons: [
+        {
+          id: '1.1',
+          title: 'Del diagrama en papel a Tinkercad y el IDE de Arduino',
+          year: 1,
+          minutes: 30,
+          practice: 'Sin hardware (simulador)',
+          area: 'Electrónica básica',
+          objectives: [
+            'Reconocer los componentes y el entorno de trabajo de una placa Arduino.',
+            'Diferenciar el diseño esquemático del montaje físico en la protoboard.',
+            'Simular su primer programa en Tinkercad antes de construirlo en el taller.'
+          ],
+          competencies: ['Pensamiento computacional', 'Alfabetización tecnológica', 'Interpretación de croquis y diagramas'],
+          materials: ['Placa Arduino UNO (o compatible)', 'Cable USB', 'PC con IDE de Arduino instalado', 'Cuenta gratuita en Tinkercad'],
+          blocks: [
+            { type: 'p', html: 'En la escuela técnica, el <strong>diagrama eléctrico</strong> es la gramática del taller: primero se piensa en el papel, luego se simula y recién después se monta. Este módulo instala esa rutina de trabajo desde el primer día.' },
+            { type: 'h3', html: 'De lo abstracto a lo concreto: la secuencia de trabajo' },
+            { type: 'ol', items: [
+              '<strong>Boceto en papel:</strong> dibujar el esquema con símbolos normalizados (batería, resistencia, LED).',
+              '<strong>Simulación:</strong> reproducir el circuito en Tinkercad Circuits y validar la lógica.',
+              '<strong>Montaje en protoboard:</strong> trasladar el esquema al hardware real en el taller.',
+              '<strong>Documentación:</strong> registrar el circuito y el código en la carpeta de la asignatura.'
+            ]},
+            { type: 'h3', html: 'La placa que usaremos: Arduino UNO' },
+            { type: 'table', headers: ['Elemento', 'Función', 'Uso en el taller'], rows: [
+              ['Pines digitales 2–13', 'Entradas/salidas todo o nada.', 'LEDs, botones, relés.'],
+              ['Pines analógicos A0–A5', 'Lecturas graduales (0–1023).', 'Potenciómetros, LDR, sensores.'],
+              ['Alimentación 5 V / GND', 'Entrega de energía.', 'Sensores simples.'],
+              ['Puerto USB', 'Programar y alimentar.', 'Conexión al PC.'],
+              ['Botón RESET', 'Reinicia el programa.', 'Volver al inicio sin recargar.']
+            ]},
+            { type: 'callout', variant: 'info', title: 'Tinkercad como “taller virtual”', html: 'Permite enseñar sin comprar hardware y sin riesgo de dañar componentes. Es ideal para la primera aproximación y para que el estudiante repita la práctica en su casa.' },
+            { type: 'h3', html: 'Tu primer sketch: “Hola, taller”' },
+            { type: 'code', file: 'Hola_Taller.ino', code: `/*
+  Primer contacto con el IDE de Arduino.
+  Envía un mensaje al Monitor Serie.
+*/
+
+void setup() {
+  Serial.begin(9600);          // Inicia la comunicación serie
+  Serial.println("Hola, taller!");
+}
+
+void loop() {
+  Serial.println("Mi primer programa funciona.");
+  delay(1000);                 // Espera 1 segundo
+}` },
+            { type: 'callout', variant: 'tip', title: 'Rutina de verificación por bloques', html: 'Verifica <strong>un bloque a la vez</strong>: ¿cablea bien? ¿compila? ¿hace lo esperado? Enseñar esta rutina reduce frustración y forma método técnico.' }
+          ]
+        },
+        {
+          id: '1.2',
+          title: 'Primer circuito guiado: LED con resistencia, voltaje, corriente y ley de Ohm',
+          year: 1,
+          minutes: 40,
+          practice: 'Montaje en protoboard',
+          area: 'Electrónica básica · Matemática aplicada',
+          objectives: [
+            'Montar un LED con su resistencia limitadora respetando la polaridad.',
+            'Aplicar la ley de Ohm para calcular la resistencia necesaria.',
+            'Comprender la estructura setup() / loop() de un sketch.'
+          ],
+          competencies: ['Cálculo aplicado', 'Cuidado del recurso material', 'Resolución de problemas en el taller'],
+          materials: ['Resistencia de 220 Ω', 'LED rojo', 'Protoboard', 'Cables de conexión', 'Multímetro (opcional)'],
+          blocks: [
+            { type: 'p', html: 'Un LED sin resistencia se quema: es la primera gran enseñanza práctica del taller. Comprender <em>por qué</em> coloca una resistencia convierte a una simple tarea de montaje en una aplicación real de la ley de Ohm.' },
+            { type: 'h3', html: 'La ley de Ohm aplicada: ¿qué resistencia uso?' },
+            { type: 'p', html: 'La ley de Ohm (V = I · R) permite calcular la resistencia que limita la corriente. Para un LED alimentado a 5 V, con caída de tensión de 2 V y corriente deseada de 15 mA:' },
+            { type: 'table', headers: ['Magnitud', 'Fórmula', 'Ejemplo'], rows: [
+              ['Tensión sobre la resistencia', 'V_R = V_fuente − V_LED', 'V_R = 5 V − 2 V = 3 V'],
+              ['Corriente deseada', 'I (según datasheet)', 'I = 0,015 A (15 mA)'],
+              ['Resistencia', 'R = V_R ÷ I', 'R = 3 ÷ 0,015 = 200 Ω'],
+              ['Valor comercial', 'Se redondea hacia arriba', 'Se usa 220 Ω']
+            ]},
+            { type: 'callout', variant: 'warn', title: 'Polaridad del LED', html: 'La pata larga es el <strong>ánodo (+)</strong> y la corta el <strong>cátodo (−)</strong>. Conectar al revés no daña el LED, pero no enciende. Siempre verificar antes de energizar.' },
+            { type: 'h3', html: 'Código: parpadeo (Blink) del taller' },
+            { type: 'code', file: 'Blink_Taller.ino', code: `/*
+  Primer montaje: LED con resistencia en el pin 9.
+  El LED parpadea cada segundo.
+*/
+
+const int PIN_LED = 9;   // LED + resistencia de 220 ohm
+
+void setup() {
+  pinMode(PIN_LED, OUTPUT);   // Configura el pin como salida
+}
+
+void loop() {
+  digitalWrite(PIN_LED, HIGH);  // Encender (5 V)
+  delay(1000);
+  digitalWrite(PIN_LED, LOW);   // Apagar (0 V)
+  delay(1000);
+}` },
+            { type: 'h3', html: 'Estructura de un sketch' },
+            { type: 'ul', items: [
+              '<code>setup()</code> se ejecuta una sola vez: configura pines y puertos.',
+              '<code>loop()</code> se repite sin fin: aquí está la lógica del proyecto.',
+              '<code>pinMode</code>, <code>digitalWrite</code> y <code>delay</code> son las funciones básicas que usarás siempre.'
+            ]},
+            { type: 'callout', variant: 'tip', title: 'Vínculo con Matemática', html: 'Propón a cada equipo medir con el multímetro la tensión sobre la resistencia y comparar con el cálculo teórico. Es una actividad de articulación entre el taller y la cátedra de Matemática.' }
+          ]
+        },
+        {
+          id: '1.3',
+          title: 'Normas de seguridad e higiene en el uso de protoboards y componentes',
+          year: 1,
+          minutes: 25,
+          practice: 'Actividad de taller',
+          area: 'Seguridad e higiene laboral',
+          objectives: [
+            'Aplicar normas de seguridad e higiene en el manejo de componentes electrónicos.',
+            'Organizar el puesto de trabajo y el cuidado de los materiales.',
+            'Elaborar una ficha normativa para el aula-taller.'
+          ],
+          competencies: ['Prevención de riesgos', 'Trabajo responsable', 'Organización del espacio de trabajo'],
+          materials: ['Protoboard y cables', 'Componentes varios', 'Cartelería de seguridad', 'Matafuegos y botiquín (según taller)'],
+          blocks: [
+            { type: 'p', html: 'La formación profesional comienza por el cuidado de las personas y de los recursos. Estas normas no son un trámite: son <strong>contenido curricular</strong> de seguridad e higiene.' },
+            { type: 'h3', html: 'Reglas de oro del puesto de electrónica' },
+            { type: 'ul', items: [
+              'Desconectar la alimentación <strong>antes</strong> de modificar cualquier conexión.',
+              'No trabajar con las manos húmedas ni sobre superficies metálicas.',
+              'Revisar el aislamiento de cables y fichas antes de energizar.',
+              'Mantener el espacio ordenado: cada cable y componente en su lugar.',
+              'Usar herramientas según su función (pinzas, alicate de corte, destornilladores).'
+            ]},
+            { type: 'h3', html: 'Cuidado de los componentes' },
+            { type: 'table', headers: ['Componente', 'Riesgo', 'Precaución'], rows: [
+              ['Arduino', 'Descarga electrostática (ESD).', 'Descargar la electricidad estática antes de manipular.'],
+              ['LED', 'Quemadura por falta de resistencia.', 'Usar siempre resistencia limitadora.'],
+              ['Protoboard', 'Contactos flojos o dañados.', 'No forzar cables; verificar filas y columnas.'],
+              ['Capacitores', 'Descarga retenida.', 'No tocar los terminales; descargar antes.'],
+              ['Motores/servos', 'Exceso de consumo.', 'Fuente externa independiente.']
+            ]},
+            { type: 'callout', variant: 'warn', title: 'Electricidad estática (ESD)', html: 'Toca un objeto metálico conectado a tierra (como el chasis del banco) antes de manipular la placa. La ESD es invisible pero puede dañar el microcontrolador.' },
+            { type: 'h3', html: 'Actividad: ficha de seguridad del aula' },
+            { type: 'ol', items: [
+              'En equipos, redacten 6 normas para el aula-taller.',
+              'Diseñen un cartel con pictogramas de los riesgos principales.',
+              'Presenten la ficha y publíquenla en el taller.',
+              'Registren en los apuntes qué mejorarían del espacio de trabajo.'
+            ]},
+            { type: 'callout', variant: 'info', title: 'Articulación ETP', html: 'Esta lección conecta con el espacio de <strong>Seguridad e Higiene</strong> del ciclo básico y anticipa hábitos exigidos en prácticas profesionalizantes.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'm2',
+      num: 2,
+      year: 2,
+      title: 'Entradas, Salidas y Sensores Básicos',
+      subtitle: '2.º año · El sistema escucha y mide',
+      area: 'Electrónica y Ciencias Aplicadas',
+      lessons: [
+        {
+          id: '2.1',
+          title: 'Pulsadores, potenciómetros y divisores de tensión: digital vs. analógico',
+          year: 2,
+          minutes: 40,
+          practice: 'Práctica con montaje',
+          area: 'Electrónica básica',
+          objectives: [
+            'Distinguir señales digitales y analógicas y sus pines correspondientes.',
+            'Montar un divisor de tensión con potenciómetro y LDR.',
+            'Leer entradas y usarlas para controlar salidas.'
+          ],
+          competencies: ['Medición e instrumentación', 'Resolución de problemas', 'Análisis de circuitos'],
+          materials: ['Pulsador', 'Potenciómetro 10 kΩ', 'Resistencia 10 kΩ', 'LED y 220 Ω', 'Cables y protoboard'],
+          blocks: [
+            { type: 'p', html: 'Toda automatización parte de <strong>percibir</strong> el entorno. Aquí el estudiantado aprende a leer señales discretas (todo o nada) y continuas (graduales), base de cualquier sistema de control.' },
+            { type: 'h3', html: 'Digital y analógico: dos formas de leer el mundo' },
+            { type: 'table', headers: ['Tipo', 'Pines', 'Valores', 'Ejemplo'], rows: [
+              ['Digital', '2–13 / A0–A5', 'HIGH (1) / LOW (0)', 'Pulsador, final de carrera.'],
+              ['Analógico', 'A0–A5', '0 a 1023', 'Potenciómetro, LDR, sensores.']
+            ]},
+            { type: 'h3', html: 'Pulsador con resistencia interna (INPUT_PULLUP)' },
+            { type: 'code', file: 'Boton_LED.ino', code: `const int BOTON = 2;   // Pulsador a GND
+const int LED   = 9;
+
+void setup() {
+  pinMode(LED, OUTPUT);
+  pinMode(BOTON, INPUT_PULLUP);   // Resistencia interna activada
+}
+
+void loop() {
+  if (digitalRead(BOTON) == LOW) {  // LOW = presionado
+    digitalWrite(LED, HIGH);
+  } else {
+    digitalWrite(LED, LOW);
+  }
+}` },
+            { type: 'h3', html: 'Divisor de tensión con potenciómetro' },
+            { type: 'code', file: 'Divisor_Tension.ino', code: `const int POT = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int lectura = analogRead(POT);            // 0 a 1023
+  int milivoltios = map(lectura, 0, 1023, 0, 5000);
+
+  Serial.print("ADC: ");
+  Serial.print(lectura);
+  Serial.print("  ->  ");
+  Serial.print(milivoltios);
+  Serial.println(" mV");
+
+  delay(200);
+}` },
+            { type: 'callout', variant: 'info', title: '¿Qué es un divisor de tensión?', html: 'Dos resistencias (una fija y una variable) reparten la tensión de alimentación. La tensión sobre la resistencia variable es la que lee el pin analógico. El potenciómetro y el LDR son divisorios variables.' },
+            { type: 'callout', variant: 'tip', title: 'Actividad de articulación', html: 'Usen el potenciómetro para regular el brillo de un LED (<code>analogWrite</code> de 0 a 255). Vincula Electrónica con Matemática (proporcionalidad y función lineal).' }
+          ]
+        },
+        {
+          id: '2.2',
+          title: 'Control del entorno: LDR, ultrasónico HC-SR04 y DHT11',
+          year: 2,
+          minutes: 45,
+          practice: 'Práctica con sensores',
+          area: 'Electrónica y Física aplicada',
+          objectives: [
+            'Integrar sensores de luz, distancia y temperatura/humedad.',
+            'Acondicionar y validar las señales leídas.',
+            'Relacionar la medición con variables físicas reales.'
+          ],
+          competencies: ['Medición y calibración', 'Interpretación de datos', 'Pensamiento científico'],
+          materials: ['LDR + resistencias', 'Sensor HC-SR04', 'Sensor DHT11', 'Librerías DHT y Ultrasonic', 'Protoboard y cables'],
+          blocks: [
+            { type: 'p', html: 'Los sensores transforman magnitudes físicas en señales eléctricas. Medir luz, distancia y temperatura permite construir proyectos escolares con verdadero valor científico y técnico.' },
+            { type: 'h3', html: '1) Sensor de luz (LDR) con divisor de tensión' },
+            { type: 'code', file: 'Sensor_Luz.ino', code: `const int LDR = A0;   // LDR + resistencia de 10k a GND
+
+void setup() { Serial.begin(9600); }
+
+void loop() {
+  int luz = analogRead(LDR);   // Más luz -> mayor lectura
+  if (luz > 600)      Serial.println("Iluminacion: ALTA");
+  else if (luz > 300) Serial.println("Iluminacion: MEDIA");
+  else                Serial.println("Iluminacion: BAJA");
+  delay(300);
+}` },
+            { type: 'h3', html: '2) Sensor ultrasónico HC-SR04 (distancia)' },
+            { type: 'code', file: 'Ultrasonico.ino', code: `const int TRIG = 9;
+const int ECHO = 10;
+
+void setup() {
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Emitir un pulso de 10 microsegundos
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  // Medir el tiempo de eco (ida y vuelta)
+  long duracion = pulseIn(ECHO, HIGH);
+  long distanciaCm = duracion * 0.034 / 2;   // velocidad del sonido
+
+  Serial.print("Distancia: ");
+  Serial.print(distanciaCm);
+  Serial.println(" cm");
+  delay(300);
+}` },
+            { type: 'h3', html: '3) Sensor de temperatura y humedad DHT11' },
+            { type: 'code', file: 'DHT11.ino', code: `#include <DHT.h>
+#define PIN_DHT 2
+#define TIPO_DHT DHT11
+DHT dht(PIN_DHT, TIPO_DHT);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  float hum = dht.readHumidity();
+  float temp = dht.readTemperature();
+
+  if (isnan(hum) || isnan(temp)) {
+    Serial.println("Error de lectura DHT11");
+    return;
+  }
+  Serial.print("Temp: "); Serial.print(temp); Serial.println(" C");
+  Serial.print("Hum : "); Serial.print(hum);  Serial.println(" %");
+  delay(2000);   // El DHT11 exige 2 s entre lecturas
+}` },
+            { type: 'callout', variant: 'warn', title: 'Instalación de librerías', html: 'Usa <strong>Programa → Incluir librería → Gestionar bibliotecas…</strong> e instala “DHT sensor library” (Adafruit) y “Adafruit Unified Sensor”. Sin ellas no compilará el ejemplo.' },
+            { type: 'table', headers: ['Sensor', 'Magnitud', 'Pin', 'Unidad'], rows: [
+              ['LDR', 'Luz', 'A0', '0–1023 (relativa)'],
+              ['HC-SR04', 'Distancia', 'D9/D10', 'cm'],
+              ['DHT11', 'Temperatura', 'D2', '°C'],
+              ['DHT11', 'Humedad', 'D2', '%']
+            ]}
+          ]
+        },
+        {
+          id: '2.3',
+          title: 'Práctica: estación meteorológica escolar y semáforo inteligente',
+          year: 2,
+          minutes: 50,
+          practice: 'Proyecto de aula',
+          area: 'Proyecto integrador de 2.º año',
+          objectives: [
+            'Integrar varios sensores en un proyecto con sentido escolar.',
+            'Traducir mediciones en decisiones automáticas (bucle de control).',
+            'Documentar y comunicar el funcionamiento del prototipo.'
+          ],
+          competencies: ['Integración de sistemas', 'Trabajo colaborativo', 'Comunicación técnica'],
+          materials: ['DHT11', 'LDR', 'LEDs (rojo/verde/amarillo)', 'Resistencias', 'Protoboard y cables'],
+          blocks: [
+            { type: 'p', html: 'Ahora integramos lo aprendido en dos proyectos con impacto real en la escuela: una estación que mide el clima y un semáforo que organiza el cruce del ingreso.' },
+            { type: 'h3', html: 'Proyecto A: estación meteorológica escolar simple' },
+            { type: 'code', file: 'Estacion_Meteorologica.ino', code: `#include <DHT.h>
+#define PIN_DHT 2
+#define LED_ALERTA 8
+DHT dht(PIN_DHT, DHT11);
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(LED_ALERTA, OUTPUT);
+  dht.begin();
+}
+
+void loop() {
+  float temp = dht.readTemperature();
+  float hum  = dht.readHumidity();
+
+  if (isnan(temp) || isnan(hum)) return;
+
+  Serial.print("Temperatura: "); Serial.println(temp);
+  Serial.print("Humedad: ");     Serial.println(hum);
+
+  // Alerta si supera los 30 C
+  digitalWrite(LED_ALERTA, temp > 30 ? HIGH : LOW);
+  delay(2000);
+}` },
+            { type: 'h3', html: 'Proyecto B: semáforo inteligente para cruce peatonal' },
+            { type: 'code', file: 'Semaforo_Inteligente.ino', code: `const int ROJO   = 8;
+const int AMARILLO = 9;
+const int VERDE  = 10;
+const int PULSADOR = 2;   // Peatón solicita el cruce
+
+void cambiarLuz(int estado) {
+  digitalWrite(ROJO,     estado == 0);
+  digitalWrite(AMARILLO, estado == 1);
+  digitalWrite(VERDE,    estado == 2);
+}
+
+void setup() {
+  pinMode(ROJO, OUTPUT); pinMode(AMARILLO, OUTPUT); pinMode(VERDE, OUTPUT);
+  pinMode(PULSADOR, INPUT_PULLUP);
+  cambiarLuz(2);   // Arranca en verde para vehículos
+}
+
+void loop() {
+  if (digitalRead(PULSADOR) == LOW) {   // Peatón pide cruzar
+    cambiarLuz(1);       // Amarillo
+    delay(1000);
+    cambiarLuz(0);       // Rojo fijo
+    delay(4000);         // Tiempo de cruce
+    cambiarLuz(2);       // Vuelve a verde
+  }
+}` },
+            { type: 'callout', variant: 'tip', title: 'Guía de proyecto', html: 'Exige a cada equipo una <strong>ficha técnica</strong>: objetivo, materiales, esquema, código comentado y evidencia (video o fotos). Es el formato que reutilizarán en los proyectos integradores.' },
+            { type: 'callout', variant: 'info', title: 'Articulación ETP', html: 'La estación conecta con Ciencias Naturales y Matemática (promedios, gráficos, unidades). El semáforo conecta con <strong>Educación Ciudadana</strong> y el cuidado del peatón.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'm3',
+      num: 3,
+      year: 3,
+      title: 'Actuadores y Maquetación Mecánica',
+      subtitle: '3.º año · Integración con el taller',
+      area: 'Taller de Mecánica y Carpintería',
+      lessons: [
+        {
+          id: '3.1',
+          title: 'Control de servomotores y motores DC (puente H) en maquetas mecánicas',
+          year: 3,
+          minutes: 50,
+          practice: 'Articulación con taller',
+          area: 'Mecánica · Carpintería · Electrónica',
+          objectives: [
+            'Controlar la posición de un servo y el giro de un motor DC.',
+            'Usar un puente H para invertir el sentido de giro.',
+            'Integrar actuadores en una maqueta construida en el taller.'
+          ],
+          competencies: ['Integración electromecánica', 'Diseño de prototipos', 'Prevención de riesgos'],
+          materials: ['Servomotor SG90', 'Motor DC', 'Módulo L293D', 'Fuente externa / pilas', 'Materiales de la maqueta'],
+          blocks: [
+            { type: 'p', html: 'Aquí la electrónica se encuentra con la mecánica. Los actuadores convierten decisiones de código en <strong>movimiento real</strong>, y la maqueta es el puente con el taller de Mecánica y Carpintería.' },
+            { type: 'h3', html: 'Servomotor: control preciso de posición' },
+            { type: 'code', file: 'Servo_Sweep.ino', code: `#include <Servo.h>
+
+Servo servo;
+const int PIN_SERVO = 9;
+
+void setup() {
+  servo.attach(PIN_SERVO);
+}
+
+void loop() {
+  for (int ang = 0; ang <= 180; ang++) {   // 0 a 180 grados
+    servo.write(ang);
+    delay(15);
+  }
+  for (int ang = 180; ang >= 0; ang--) {
+    servo.write(ang);
+    delay(15);
+  }
+}` },
+            { type: 'h3', html: 'Motor DC con puente H L293D' },
+            { type: 'code', file: 'Motor_DC.ino', code: `const int ENA = 9;   // Velocidad (PWM)
+const int IN1 = 8;   // Sentido
+const int IN2 = 7;   // Sentido
+
+void setup() {
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+}
+
+void adelante(int v) {
+  digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+  analogWrite(ENA, v);
+}
+void atras(int v) {
+  digitalWrite(IN1, LOW);  digitalWrite(IN2, HIGH);
+  analogWrite(ENA, v);
+}
+void detener() {
+  digitalWrite(IN1, LOW);  digitalWrite(IN2, LOW);
+  analogWrite(ENA, 0);
+}
+
+void loop() {
+  adelante(200); delay(2000);
+  detener();     delay(500);
+  atras(200);    delay(2000);
+  detener();     delay(1000);
+}` },
+            { type: 'callout', variant: 'warn', title: 'Alimentación externa obligatoria', html: 'Alimenta el motor y el L293D con una fuente independiente y comparte el <strong>GND</strong> con el Arduino. Nunca tomes la corriente del motor del pin de 5 V: dañarás la placa.' },
+            { type: 'table', headers: ['Actuador', 'Control', 'Ventaja', 'En la maqueta'], rows: [
+              ['Servo', 'Servo.write(°)', 'Posición exacta.', 'Compuertas, brazos, veletas.'],
+              ['Motor DC', 'Puente H + PWM', 'Giro continuo.', 'Vehículos, cintas, ventiladores.'],
+              ['Motor paso a paso', 'Librería Stepper', 'Muy preciso.', 'Mecanismos de avance.'],
+              ['Electroimán / relé', 'digitalWrite', 'Enciende circuitos.', 'Puertas, luces de la maqueta.']
+            ]},
+            { type: 'callout', variant: 'tip', title: 'Integración con el taller', html: 'Coordina con los docentes de Mecánica/Carpintería el diseño de la estructura (soportes, engranajes, ejes). El proyecto final del módulo debe combinar <strong>maqueta + control electrónico</strong>.' }
+          ]
+        },
+        {
+          id: '3.2',
+          title: 'Salidas visuales: LCD 16x2 / I2C y bucles de control',
+          year: 3,
+          minutes: 45,
+          practice: 'Práctica con display',
+          area: 'Electrónica digital',
+          objectives: [
+            'Mostrar información en una pantalla LCD 16x2 (paralelo e I2C).',
+            'Diseñar bucles de control sin bloquear el programa (máquina de estados).',
+            'Combinar sensores, display y actuadores en un panel de control.'
+          ],
+          competencies: ['Diseño de interfaces', 'Programación estructurada', 'Autonomía técnica'],
+          materials: ['LCD 16x2', 'Módulo I2C (opcional)', 'Potenciómetro 10 kΩ', 'Cables y protoboard'],
+          blocks: [
+            { type: 'p', html: 'Una pantalla comunica el estado del sistema al operario. Combinada con bucles de control, permite construir verdaderos <strong>paneles de control</strong> para maquetas y procesos del taller.' },
+            { type: 'h3', html: 'LCD 16x2 en paralelo (6 pines)' },
+            { type: 'code', file: 'LCD_Paralelo.ino', code: `#include <LiquidCrystal.h>
+
+// LiquidCrystal(RS, E, D4, D5, D6, D7)
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+  lcd.begin(16, 2);
+  lcd.setCursor(0, 0);
+  lcd.print("Taller Arduino");
+  lcd.setCursor(0, 1);
+  lcd.print("3er anio - OK");
+}
+
+void loop() {}` },
+            { type: 'h3', html: 'LCD con módulo I2C (solo 2 cables)' },
+            { type: 'code', file: 'LCD_I2C.ino', code: `#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Direccion I2C habitual: 0x27 (a veces 0x3F)
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+void setup() {
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Panel de control");
+}
+
+void loop() {}` },
+            { type: 'callout', variant: 'info', title: '¿Por qué preferir I2C?', html: 'El módulo I2C reduce de 6 a 2 cables (SDA y SCL) y simplifica el cableado en maquetas con muchos componentes. Requiere la librería <strong>LiquidCrystal_I2C</strong> y verificar la dirección del módulo (0x27 o 0x3F).' },
+            { type: 'h3', html: 'Bucles de control: máquina de estados sin delay()' },
+            { type: 'code', file: 'Bucle_Control.ino', code: `const int LED_ROJO  = 8;
+const int LED_VERDE = 9;
+const int PULSADOR  = 2;
+
+int estado = 0;
+unsigned long anterior = 0;
+const unsigned long INTERVALO = 2000;
+
+void aplicar() {
+  digitalWrite(LED_ROJO,  estado == 0);
+  digitalWrite(LED_VERDE, estado == 1);
+}
+
+void setup() {
+  pinMode(LED_ROJO, OUTPUT); pinMode(LED_VERDE, OUTPUT);
+  pinMode(PULSADOR, INPUT_PULLUP);
+}
+
+void loop() {
+  unsigned long ahora = millis();
+  if (ahora - anterior >= INTERVALO) {   // No bloquea el programa
+    anterior = ahora;
+    estado = !estado;
+    aplicar();
+  }
+  if (digitalRead(PULSADOR) == LOW) {
+    estado = !estado;
+    aplicar();
+    delay(250);   // Anti-rebote
+  }
+}` },
+            { type: 'callout', variant: 'tip', title: 'delay() vs. millis()', html: '<code>delay()</code> bloquea toda la placa. Con <code>millis()</code> y una máquina de estados el sistema puede atender varios sensores y el display al mismo tiempo. Es el salto de calidad hacia proyectos profesionales.' }
+          ]
+        },
+        {
+          id: '3.3',
+          title: 'Práctica: brazo robótico simple o portón automatizado con final de carrera',
+          year: 3,
+          minutes: 55,
+          practice: 'Proyecto de integración',
+          area: 'Proyecto integrador de 3.º año',
+          objectives: [
+            'Diseñar y construir un mecanismo accionado por Arduino.',
+            'Incorporar finales de carrera para límites de seguridad.',
+            'Presentar el prototipo como cierre del ciclo básico.'
+          ],
+          competencies: ['Diseño mecánico-electrónico', 'Gestión de proyecto', 'Comunicación y defensa técnica'],
+          materials: ['Servos o motor DC + L293D', 'Finales de carrera', 'Estructura (cartón, trupán, MDF)', 'Fuente externa'],
+          blocks: [
+            { type: 'p', html: 'Este es el proyecto que corona el ciclo básico: un mecanismo real, con estructura construida en el taller y controlado por Arduino. Elegir la opción según los recursos disponibles.' },
+            { type: 'h3', html: 'Opción A: brazo robótico simple' },
+            { type: 'ul', items: [
+              'Base giratoria con servo de rotación.',
+              'Dos articulaciones (hombro y codo) con servos.',
+              'Pinza accionada por un tercer servo.',
+              'Control por potenciómetros o por rutina automática.'
+            ]},
+            { type: 'h3', html: 'Opción B: portón automatizado con final de carrera' },
+            { type: 'code', file: 'Porton_Automatico.ino', code: `#include <Servo.h>
+
+Servo porton;
+const int PIN_SERVO  = 9;
+const int FIN_ABIERTO = 2;   // Final de carrera superior
+const int FIN_CERRADO = 3;   // Final de carrera inferior
+const int PULSADOR    = 4;   // Orden del operario
+
+bool abierto = false;
+
+void setup() {
+  porton.attach(PIN_SERVO);
+  pinMode(FIN_ABIERTO, INPUT_PULLUP);
+  pinMode(FIN_CERRADO, INPUT_PULLUP);
+  pinMode(PULSADOR, INPUT_PULLUP);
+  porton.write(0);   // Comienza cerrado
+}
+
+void loop() {
+  if (digitalRead(PULSADOR) == LOW) {   // Orden de accionar
+    delay(300);                          // Anti-rebote
+    if (!abierto) {
+      while (digitalRead(FIN_ABIERTO) == HIGH) {
+        porton.write(porton.read() + 1);   // Abre gradualmente
+        delay(15);
+      }
+      abierto = true;
+    } else {
+      while (digitalRead(FIN_CERRADO) == HIGH) {
+        porton.write(porton.read() - 1);   // Cierra gradualmente
+        delay(15);
+      }
+      abierto = false;
+    }
+  }
+}` },
+            { type: 'callout', variant: 'warn', title: 'Los finales de carrera salvan mecanismos', html: 'Un final de carrera (switch) detiene el motor al llegar al límite físico. Sin ellos, el servo o motor fuerza la estructura y puede romperla. Es un concepto clave de <strong>seguridad de máquinas</strong>.' },
+            { type: 'callout', variant: 'tip', title: 'Cierre de ciclo básico', html: 'Presenta los proyectos en una <strong>muestra técnica interna</strong>. Cada equipo defiende su diseño ante docentes de Electrónica, Mecánica y Carpintería: es la antesala de las prácticas profesionalizantes.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'm4',
+      num: 4,
+      year: 3,
+      title: 'Proyecto Integrador y Evaluación por Competencias',
+      subtitle: '3.º año · Cierre del ciclo básico',
+      area: 'Proyecto interdisciplinario · Formación para el trabajo',
+      lessons: [
+        {
+          id: '4.1',
+          title: 'Diseño de un proyecto integrador interdisciplinario (ABP)',
+          year: 3,
+          minutes: 45,
+          practice: 'Planificación docente',
+          area: 'Proyecto interdisciplinario',
+          objectives: [
+            'Formular un reto técnico con sentido social y escolar.',
+            'Planificar un proyecto ABP articulando varios talleres.',
+            'Definir etapas, roles, recursos y productos finales.'
+          ],
+          competencies: ['Planificación por proyectos', 'Articulación interdisciplinaria', 'Liderazgo pedagógico'],
+          materials: [ 'Plantilla de proyecto', 'Cronograma', 'Ficha de roles', 'Recursos de los talleres'],
+          blocks: [
+            { type: 'p', html: 'Un proyecto integrador en la ETP no es “una práctica más”: es la oportunidad de que el estudiantado movilice saberes de varios talleres para <strong>resolver un problema concreto</strong>. El ABP ordena ese proceso.' },
+            { type: 'h3', html: 'Fases del proyecto integrador' },
+            { type: 'table', headers: ['Fase', 'Propósito', 'Evidencia'], rows: [
+              ['1. Reto', 'Presentar un problema real del entorno escolar.', 'Documento con la pregunta problémica.'],
+              ['2. Investigación', 'Fundamentar la solución con saberes técnicos.', 'Ficha de investigación.'],
+              ['3. Diseño', 'Bocetar el dispositivo y su lógica.', 'Esquema y diagrama de flujo.'],
+              ['4. Construcción', 'Montar el circuito y la estructura.', 'Prototipo en avance.'],
+              ['5. Prueba y mejora', 'Detectar fallas y optimizar.', 'Registro de pruebas (bitácora).'],
+              ['6. Presentación', 'Comunicar y defender el proyecto.', 'Muestra y defensa oral.']
+            ]},
+            { type: 'h3', html: 'Plantilla de diseño' },
+            { type: 'ul', items: [
+              '<strong>Título y reto:</strong> ¿Qué problema resolvemos y para quién?',
+              '<strong>Talleres que articula:</strong> Electrónica, Mecánica, Carpintería, Matemática, Ciencias.',
+              '<strong>Entradas y salidas:</strong> sensores que lee y actuadores que acciona.',
+              '<strong>Equipo y roles:</strong> programación, montaje, documentación, vocero.',
+              '<strong>Recursos y tiempos:</strong> componentes, herramientas, cronograma por clase.',
+              '<strong>Producto final:</strong> maqueta funcional, informe técnico y defensa.'
+            ]},
+            { type: 'callout', variant: 'info', title: 'Ejemplos de reto por año', html: '<strong>1.º:</strong> “Semáforo escolar que cuide el cruce del ingreso”. <strong>2.º:</strong> “Riego automático de la huerta con medición de humedad”. <strong>3.º:</strong> “Portón automatizado para el depósito del taller”.' },
+            { type: 'callout', variant: 'tip', title: 'Consejo de gestión', html: 'Define <strong>puntos de control</strong> cada clase y una rúbrica compartida desde el inicio. El estudiantado orienta su esfuerzo cuando conoce los criterios de logro.' }
+          ]
+        },
+        {
+          id: '4.2',
+          title: 'Evaluación por competencias: rúbricas de taller y portafolio',
+          year: 3,
+          minutes: 40,
+          practice: 'Evaluación docente',
+          area: 'Evaluación de aprendizajes',
+          objectives: [
+            'Diseñar rúbricas que valoren proceso, producto y actitudes.',
+            'Aplicar el portafolio y la bitácora como instrumentos formativos.',
+            'Promover la autoevaluación y la coevaluación.'
+          ],
+          competencies: ['Evaluación formativa', 'Uso de instrumentos', 'Retroalimentación'],
+          materials: ['Rúbrica modelo', 'Planilla de coevaluación', 'Portafolio / bitácora del estudiante'],
+          blocks: [
+            { type: 'p', html: 'En la ETP se evalúa <strong>lo que el estudiante sabe hacer</strong> y cómo lo hace. Una rúbrica por competencias valora el proceso, la calidad técnica, la seguridad y el trabajo colaborativo, no solo el resultado final.' },
+            { type: 'h3', html: 'Rúbrica modelo (adaptable por año)' },
+            { type: 'table', headers: ['Criterio', 'Inicial (1)', 'En proceso (2)', 'Logrado (3)'], rows: [
+              ['Comprensión técnica', 'No explica el circuito.', 'Explica parcialmente.', 'Fundamenta decisiones con criterio.'],
+              ['Montaje y orden', 'Conexiones con errores.', 'Circuito correcto.', 'Montaje prolijo y documentado.'],
+              ['Programación', 'Código incompleto.', 'Cumple el objetivo.', 'Código claro, comentado y optimizado.'],
+              ['Seguridad e higiene', 'Omite normas.', 'Las aplica con ayuda.', 'Las cumple y promueve en el equipo.'],
+              ['Resolución de problemas', 'Requiere ayuda constante.', 'Resuelve con apoyo.', 'Diagnostica y corrige con autonomía.'],
+              ['Trabajo en equipo', 'Participación desigual.', 'Cumple su rol.', 'Integra y ayuda a los demás.'],
+              ['Comunicación técnica', 'Presentación incompleta.', 'Explica con claridad.', 'Argumenta y responde con soltura.']
+            ]},
+            { type: 'h3', html: 'Instrumentos complementarios' },
+            { type: 'ul', items: [
+              '<strong>Bitácora / diario de taller:</strong> registro del proceso, errores y soluciones.',
+              '<strong>Portafolio:</strong> recopilación de esquemas, códigos y fotos del avance.',
+              '<strong>Lista de cotejo:</strong> verificación rápida de pasos y componentes.',
+              '<strong>Autoevaluación y coevaluación:</strong> valoración del aporte de cada integrante.'
+            ]},
+            { type: 'h3', html: 'Ponderación sugerida' },
+            { type: 'table', headers: ['Aspecto', 'Peso'], rows: [
+              ['Funcionamiento del prototipo', '30%'],
+              ['Calidad del código y documentación', '20%'],
+              ['Proceso, bitácora y seguridad', '20%'],
+              ['Trabajo colaborativo', '15%'],
+              ['Defensa técnica', '15%']
+            ]},
+            { type: 'callout', variant: 'tip', title: 'Reto docente', html: 'Comparte la rúbrica al inicio y permite que los equipos propongan un criterio propio. Aumenta la implicación y la comprensión del proceso evaluativo.' }
+          ]
+        },
+        {
+          id: '4.3',
+          title: 'De la escuela al mundo del trabajo: feria técnica y cultura de seguridad',
+          year: 3,
+          minutes: 35,
+          practice: 'Actividad institucional',
+          area: 'Formación para el trabajo',
+          objectives: [
+            'Organizar una muestra técnica que comunique los proyectos.',
+            'Consolidar una cultura de seguridad e higiene en el taller.',
+            'Vincular los aprendizajes del ciclo básico con el mundo del trabajo.'
+          ],
+          competencies: ['Ciudadanía técnica', 'Comunicación institucional', 'Cultura del trabajo seguro'],
+          materials: ['Espacio de exhibición', 'Cartelería y folletos', 'Prototipos', 'Registro audiovisual'],
+          blocks: [
+            { type: 'p', html: 'El cierre del ciclo básico es la antesala del mundo del trabajo y de las prácticas profesionalizantes. La <strong>muestra técnica</strong> permite comunicar lo producido y consolidar hábitos laborales.' },
+            { type: 'h3', html: 'Organizar la feria técnica' },
+            { type: 'ol', items: [
+              'Definir fecha, espacio y recorrido de la muestra.',
+              'Preparar material de divulgación (folleto, cartel del proyecto).',
+              'Asignar roles: recepción, guías, demostración, registro audiovisual.',
+              'Invitar a familias, otros cursos y docentes de todos los talleres.',
+              'Evaluar la jornada y recoger retroalimentación de los visitantes.'
+            ]},
+            { type: 'h3', html: 'Cultura de seguridad e higiene' },
+            { type: 'table', headers: ['Hábito', 'Aplicación en el taller', 'En el mundo del trabajo'], rows: [
+              ['Orden y limpieza', 'Puesto de trabajo organizado.', 'Ambiente laboral eficiente.'],
+              ['Uso de EPP', 'Protección según la tarea.', 'Obligación legal en la industria.'],
+              ['Registro de tareas', 'Bitácora del proyecto.', 'Parte de trabajo.'],
+              ['Trabajo en equipo', 'Roles y comunicación.', 'Equipos de producción.'],
+              ['Mejora continua', 'Prueba y optimización.', 'Control de calidad.']
+            ]},
+            { type: 'callout', variant: 'info', title: 'Vinculación con el mundo del trabajo', html: 'Estos hábitos son los que la industria espera de un técnica/o. Enseñarlos desde el ciclo básico facilita la inserción en prácticas profesionalizantes y en el campo laboral.' },
+            { type: 'callout', variant: 'tip', title: 'Cierre del curso', html: 'Cierra con una <strong>reflexión institucional</strong>: ¿qué aprendimos?, ¿qué mejoraríamos para el año próximo?, ¿cómo continuamos con Arduino en el ciclo superior? Registra las conclusiones en los apuntes de esta lección.' }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+/* ---------------------------------------------------------
+   2) ESTADO Y PERSISTENCIA (localStorage)
+   --------------------------------------------------------- */
+const STORAGE_KEY = 'curso-arduino-etp:v1';
+const STATUS = { PENDIENTE: 'pendiente', CURSO: 'en-curso', COMPLETADA: 'completada' };
+
+const defaultState = () => ({
+  status: {},           // { '1.1': 'completada' }
+  notes: {},            // apuntes personales por lección
+  plans: {},            // planificaciones del docente por lección
+  theme: 'light',
+  lastLesson: null,
+  collapsedModules: [],
+  yearFilter: 'all'
+});
+
+let state = defaultState();
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      state = { ...defaultState(), ...parsed };
+      state.status = parsed.status || {};
+      state.notes = parsed.notes || {};
+      state.plans = parsed.plans || {};
+      state.collapsedModules = parsed.collapsedModules || [];
+    }
+  } catch (err) {
+    console.warn('No se pudo leer el progreso guardado.', err);
+    state = defaultState();
+  }
+}
+
+function saveProgress() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (err) {
+    console.warn('No se pudo guardar el progreso.', err);
+    toast('No se pudo guardar en este navegador.', 'warn');
+  }
+}
+
+/* ---------------------------------------------------------
+   3) UTILIDADES
+   --------------------------------------------------------- */
+const ALL_LESSONS = COURSE.modules.flatMap(m =>
+  m.lessons.map(l => ({ ...l, moduleId: m.id, moduleNum: m.num, moduleTitle: m.title, moduleYear: m.year }))
+);
+const TOTAL_LESSONS = ALL_LESSONS.length;
+const YEARS = [...new Set(COURSE.modules.map(m => m.year))].sort();
+
+const getLesson = id => ALL_LESSONS.find(l => l.id === id);
+const getModule = id => COURSE.modules.find(m => m.id === id);
+const lessonStatus = id => state.status[id] || STATUS.PENDIENTE;
+
+const completedLessons = () => ALL_LESSONS.filter(l => lessonStatus(l.id) === STATUS.COMPLETADA);
+function progressPercent() {
+  const done = completedLessons().length;
+  return TOTAL_LESSONS === 0 ? 0 : Math.round((done / TOTAL_LESSONS) * 100);
+}
+function moduleStats(mod) {
+  const done = mod.lessons.filter(l => lessonStatus(l.id) === STATUS.COMPLETADA).length;
+  return { done, total: mod.lessons.length };
+}
+function yearStats(year) {
+  const les = ALL_LESSONS.filter(l => l.moduleYear === year);
+  return { done: les.filter(l => lessonStatus(l.id) === STATUS.COMPLETADA).length, total: les.length };
+}
+function firstPendingLesson() {
+  const pool = state.yearFilter === 'all'
+    ? ALL_LESSONS
+    : ALL_LESSONS.filter(l => l.moduleYear === Number(state.yearFilter));
+  return (pool.find(l => lessonStatus(l.id) !== STATUS.COMPLETADA) || pool[0] || ALL_LESSONS[0]);
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function highlightCode(code) {
+  const esc = escapeHtml(code);
+  const pattern = new RegExp([
+    '(\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)',
+    '("(?:[^"\\\\]|\\\\.)*"|\'(?:[^\'\\\\]|\\\\.)*\')',
+    '(\\b(?:0x[0-9A-Fa-f]+|\\d+\\.?\\d*)\\b)',
+    '(\\b(?:void|int|long|float|double|char|bool|boolean|byte|word|unsigned|const|static|if|else|for|while|do|switch|case|break|continue|return|true|false|HIGH|LOW|INPUT|OUTPUT|INPUT_PULLUP|String|Serial|Servo|LiquidCrystal|LiquidCrystal_I2C|DHT|setup|loop|pinMode|digitalWrite|digitalRead|analogWrite|analogRead|delay|delayMicroseconds|pulseIn|millis|micros|map|constrain|isnan|tone|noTone|random|randomSeed|attach|detach|write|read|print|println|begin|available|setCursor|createChar|init|backlight)\\b)',
+    '([A-Za-z_]\\w*)(?=\\s*\\()',
+    '(^[ \\t]*#\\w+)'
+  ].join('|'), 'gm');
+
+  return esc.replace(pattern, (m, com, str, num, kw, fn, pre) => {
+    if (com) return `<span class="tok-com">${m}</span>`;
+    if (str) return `<span class="tok-str">${m}</span>`;
+    if (num) return `<span class="tok-num">${m}</span>`;
+    if (kw)  return `<span class="tok-kw">${m}</span>`;
+    if (fn)  return `<span class="tok-fn">${m}</span>`;
+    if (pre) return `<span class="tok-pre">${m}</span>`;
+    return m;
+  });
+}
+
+/* ---------------------------------------------------------
+   4) RENDER DE BLOQUES DE CONTENIDO
+   --------------------------------------------------------- */
+function renderBlock(block, idx) {
+  switch (block.type) {
+    case 'p':  return `<p>${block.html}</p>`;
+    case 'h3': return `<h3>${block.html}</h3>`;
+    case 'h4': return `<h4>${block.html}</h4>`;
+    case 'ul': return `<ul>${block.items.map(i => `<li>${i}</li>`).join('')}</ul>`;
+    case 'ol': return `<ol>${block.items.map(i => `<li>${i}</li>`).join('')}</ol>`;
+    case 'table':
+      return `<div class="table-wrap"><table>
+        <thead><tr>${block.headers.map(h => `<th scope="col">${h}</th>`).join('')}</tr></thead>
+        <tbody>${block.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>`;
+    case 'callout': {
+      const icons = {
+        info: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="1.1" fill="currentColor"/>',
+        tip: '<path d="M10 3h4M12 3v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 21h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 6a6 6 0 0 0-3.5 10.9c.5.4.8 1 .8 1.6h5.4c0-.6.3-1.2.8-1.6A6 6 0 0 0 12 6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+        warn: '<path d="M12 3 2 20h20L12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="18" r="1.1" fill="currentColor"/>'
+      };
+      return `<div class="callout callout--${block.variant}">
+        <span class="callout__icon"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">${icons[block.variant] || icons.info}</svg></span>
+        <div class="callout__body">
+          ${block.title ? `<strong class="callout__title">${block.title}</strong>` : ''}
+          <div>${block.html}</div>
+        </div>
+      </div>`;
+    }
+    case 'code':
+      return `<figure class="code-block">
+        <figcaption class="code-block__head">
+          <span class="code-block__file"><span class="code-block__dots"><i></i><i></i><i></i></span>${block.file}</span>
+          <button class="code-block__copy" type="button" data-copy="code-${idx}" aria-label="Copiar el código de ${block.file}">
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V6a2 2 0 0 1 2-2h9" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            Copiar código
+          </button>
+        </figcaption>
+        <pre id="code-${idx}" tabindex="0"><code>${highlightCode(block.code)}</code></pre>
+      </figure>`;
+    default: return '';
+  }
+}
+
+/* ---------------------------------------------------------
+   5) RENDER DE LA INTERFAZ
+   --------------------------------------------------------- */
+const els = {
+  sidebar: document.getElementById('sidebar'),
+  moduleList: document.getElementById('moduleList'),
+  lessonView: document.getElementById('lessonView'),
+  progressFill: document.getElementById('progressFill'),
+  progressPercent: document.getElementById('progressPercent'),
+  progressBar: document.querySelector('.progress-bar'),
+  doneCount: document.getElementById('doneCount'),
+  totalCount: document.getElementById('totalCount'),
+  yearProgress: document.getElementById('yearProgress'),
+  ringValue: document.getElementById('ringValue'),
+  ringText: document.getElementById('ringText'),
+  continueBtn: document.getElementById('continueBtn'),
+  continueText: document.getElementById('continueText'),
+  resetBtn: document.getElementById('resetBtn'),
+  themeToggle: document.getElementById('themeToggle'),
+  menuToggle: document.getElementById('menuToggle'),
+  overlay: document.getElementById('overlay'),
+  toastRegion: document.getElementById('toastRegion'),
+  yearButtons: Array.from(document.querySelectorAll('.year-filter__btn'))
+};
+const RING_CIRC = 2 * Math.PI * 16;
+
+function yearBadge(year) {
+  return `<span class="year-badge year-badge--${year}">${year}.º año</span>`;
+}
+
+function renderSidebar() {
+  els.moduleList.innerHTML = COURSE.modules.map(mod => {
+    const { done, total } = moduleStats(mod);
+    const isOpen = !state.collapsedModules.includes(mod.id);
+    const hidden = state.yearFilter !== 'all' && mod.year !== Number(state.yearFilter);
+
+    const lessonsHtml = mod.lessons.map(les => {
+      const st = lessonStatus(les.id);
+      const cls = [
+        'lesson-link',
+        st === STATUS.COMPLETADA ? 'is-done' : '',
+        st === STATUS.CURSO ? 'is-current' : '',
+        state.lastLesson === les.id ? 'is-active' : ''
+      ].filter(Boolean).join(' ');
+      return `<li>
+        <button class="${cls}" type="button" data-lesson="${les.id}">
+          <span class="lesson-link__status" aria-hidden="true">
+            <svg class="lesson-link__check" viewBox="0 0 24 24" width="13" height="13"><path d="M4 12.5l5 5 11-11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="lesson-link__num">${les.id}</span>
+          <span class="lesson-link__label" title="${escapeHtml(les.title)}">${escapeHtml(les.title)}</span>
+        </button>
+      </li>`;
+    }).join('');
+
+    return `<section class="module ${hidden ? 'is-hidden' : ''}" data-module="${mod.id}" data-open="${isOpen}">
+      <button class="module__head" type="button" data-module-toggle="${mod.id}" aria-expanded="${isOpen}" aria-controls="lessons-${mod.id}">
+        <span class="module__index">${mod.num}</span>
+        <span class="module__titles">
+          <span class="module__title">${escapeHtml(mod.title)}</span>
+          <span class="module__sub">${done}/${total} completadas · ${yearBadge(mod.year)}</span>
+        </span>
+        <span class="module__chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+      <div class="module__body">
+        <ul class="module__lessons" id="lessons-${mod.id}">${lessonsHtml}</ul>
+      </div>
+    </section>`;
+  }).join('');
+}
+
+function renderHero() {
+  const pct = progressPercent();
+  const started = Object.keys(state.status).length > 0;
+  const next = firstPendingLesson();
+
+  const yearCards = YEARS.map(y => {
+    const s = yearStats(y);
+    const p = s.total ? Math.round((s.done / s.total) * 100) : 0;
+    return `<div class="year-progress__row">
+      <b>${y}.º año</b>
+      <span class="year-progress__bar"><i style="width:${p}%"></i></span>
+      <span>${s.done}/${s.total}</span>
+    </div>`;
+  }).join('');
+
+  els.lessonView.innerHTML = `
+    <article class="hero">
+      <section class="hero__panel">
+        <span class="lesson__eyebrow">Formación docente ETP · Ciclo Básico</span>
+        <h1>${escapeHtml(COURSE.title)}</h1>
+        <p>Recurso de capacitación para docentes de Escuela Técnica. Cuatro módulos que recorren 1.º, 2.º y 3.º año, con encuadre didáctico, códigos listos para el taller y espacio para tus apuntes y planificaciones. Todo se guarda en este navegador.</p>
+        <div class="hero__actions">
+          <button class="btn btn--primary btn--lg" type="button" data-lesson="${next.id}">
+            ${started ? 'Continuar' : 'Comenzar'} por la lección ${escapeHtml(next.id)}
+          </button>
+          <button class="btn btn--ghost" type="button" data-action="continue">Ir a mi siguiente lección</button>
+        </div>
+        <p style="margin-top:1.2rem;margin-bottom:0;font-size:.9rem">Avance general: <strong>${pct}%</strong> · ${completedLessons().length} de ${TOTAL_LESSONS} lecciones completadas</p>
+      </section>
+
+      <div class="feature">
+        <div class="feature__icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="6" y="11" width="3" height="6" fill="currentColor"/><rect x="11" y="7" width="3" height="10" fill="currentColor"/><rect x="16" y="13" width="3" height="4" fill="currentColor"/></svg></div>
+        <h3>Avance por año del ciclo básico</h3>
+        <div class="year-progress" style="margin-top:.5rem">${yearCards}</div>
+      </div>
+
+      <div class="feature-grid" style="margin-top:1rem">
+        <div class="feature">
+          <div class="feature__icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9l3 3-3 3M13 15h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>4 módulos, 12 lecciones</h3>
+          <p>Estructura ETP de 1.º a 3.º año, con proyectos integradores por nivel.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 3l7 4v10l-7 4-7-4V7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 3v18M5 7l7 4 7-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></div>
+          <h3>Encuadre didáctico</h3>
+          <p>Cada lección incluye resultados de aprendizaje, competencias y materiales del taller.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8M8 13h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <h3>Apuntes y planificación</h3>
+          <p>Guarda por lección tus apuntes y la planificación de clase; quedan en tu navegador.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8 17V9M12 17V5M16 17v-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <h3>Progreso persistente</h3>
+          <p>Estado de cada lección y porcentaje general guardados localmente.</p>
+        </div>
+      </div>
+    </article>`;
+
+  setActiveLesson(null);
+  updateProgressUI();
+}
+
+function renderLesson(id) {
+  const lesson = getLesson(id);
+  if (!lesson) { renderHero(); return; }
+
+  const mod = getModule(lesson.moduleId);
+  const st = lessonStatus(id);
+  const isDone = st === STATUS.COMPLETADA;
+  const idx = ALL_LESSONS.findIndex(l => l.id === id);
+  const prev = ALL_LESSONS[idx - 1];
+  const next = ALL_LESSONS[idx + 1];
+
+  const bodyHtml = lesson.blocks.map(renderBlock).join('');
+  const objHtml = `<ul>${lesson.objectives.map(o => `<li>${o}</li>`).join('')}</ul>`;
+  const compHtml = `<div class="etp-tags">${lesson.competencies.map(c => `<span class="etp-tag">${escapeHtml(c)}</span>`).join('')}</div>`;
+  const matHtml = `<ul>${lesson.materials.map(m => `<li>${escapeHtml(m)}</li>`).join('')}</ul>`;
+
+  els.lessonView.innerHTML = `
+    <article class="lesson">
+      <nav class="lesson__breadcrumb" aria-label="Ubicación">
+        <span>Módulo ${mod.num}</span>
+        <span aria-hidden="true">›</span>
+        <span>${escapeHtml(mod.title)}</span>
+      </nav>
+
+      <header>
+        <span class="lesson__eyebrow">Lección ${lesson.id} · ${yearBadge(lesson.year)}</span>
+        <h1 class="lesson__title">${escapeHtml(lesson.title)}</h1>
+        <div class="lesson__meta">
+          <span class="chip"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> ${lesson.minutes} min</span>
+          <span class="chip"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> ${escapeHtml(lesson.area)}</span>
+          <span class="chip"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M9 3v6M15 3v6M7 9h10v3a5 5 0 0 1-10 0z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 17v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> ${escapeHtml(lesson.practice)}</span>
+          <span class="chip lesson__status-chip ${isDone ? 'is-done' : ''}" id="statusChip">
+            ${isDone ? '✓ Completada' : (st === STATUS.CURSO ? '● En curso' : '○ Pendiente')}
+          </span>
+        </div>
+      </header>
+
+      <div class="etp-grid">
+        <div class="etp-card">
+          <div class="etp-card__head">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 11l3 3L22 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12a9 9 0 1 1-6.2-8.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <h4>Resultados de aprendizaje</h4>
+          </div>
+          ${objHtml}
+        </div>
+        <div class="etp-card">
+          <div class="etp-card__head">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3l2.4 5.5L20 9.3l-4 3.9.9 5.8L12 16.4 7.1 19l.9-5.8-4-3.9 5.6-.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <h4>Competencias</h4>
+          </div>
+          ${compHtml}
+        </div>
+        <div class="etp-card">
+          <div class="etp-card__head">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 7v7l9 4 9-4V7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            <h4>Materiales y recursos</h4>
+          </div>
+          ${matHtml}
+        </div>
+      </div>
+
+      <div class="lesson__body">${bodyHtml}</div>
+
+      <section class="teacher-workspace" aria-label="Trabajo del docente">
+        <div class="field">
+          <div class="section-label">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 6h11M8 12h11M8 18h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="4" cy="6" r="1.4" fill="currentColor"/><circle cx="4" cy="12" r="1.4" fill="currentColor"/><circle cx="4" cy="18" r="1.4" fill="currentColor"/></svg>
+            Planificación de la clase
+          </div>
+          <label class="sr-only" for="planField">Planificación de la lección ${lesson.id}</label>
+          <textarea id="planField" data-field="plan" data-lesson="${lesson.id}" placeholder="Objetivos de la clase, inicio - desarrollo - cierre, tiempos, agrupamientos, articulación con otros talleres…">${escapeHtml(state.plans[id] || '')}</textarea>
+          <p class="field__hint" id="hint-plan" aria-live="polite"></p>
+        </div>
+
+        <div class="field">
+          <div class="section-label">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            Apuntes y observaciones
+          </div>
+          <label class="sr-only" for="notesField">Apuntes de la lección ${lesson.id}</label>
+          <textarea id="notesField" data-field="notes" data-lesson="${lesson.id}" placeholder="Dudas del grupo, ajustes de montaje, resultados de la experiencia, ideas para mejorar la próxima clase…">${escapeHtml(state.notes[id] || '')}</textarea>
+          <p class="field__hint" id="hint-notes" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <div class="lesson__actions">
+        <div class="lesson__nav">
+          <button class="btn btn--ghost" type="button" ${prev ? `data-lesson="${prev.id}"` : 'disabled'}>
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Anterior
+          </button>
+          <button class="btn btn--ghost" type="button" ${next ? `data-lesson="${next.id}"` : 'disabled'}>
+            Siguiente
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <button id="completeBtn" class="btn btn--lg ${isDone ? 'btn--done' : 'btn--success'}" type="button" data-lesson="${lesson.id}">
+          ${isDone ? '✓ Lección completada (desmarcar)' : 'Marcar como completada'}
+        </button>
+      </div>
+    </article>`;
+
+  setActiveLesson(id);
+  updateProgressUI();
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function setActiveLesson(id) {
+  els.moduleList.querySelectorAll('.lesson-link').forEach(btn => {
+    const active = btn.dataset.lesson === id;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-current', active ? 'true' : 'false');
+  });
+}
+
+function updateProgressUI() {
+  const pct = progressPercent();
+  const done = completedLessons().length;
+
+  els.progressFill.style.width = pct + '%';
+  els.progressPercent.textContent = pct + '%';
+  els.doneCount.textContent = done;
+  els.totalCount.textContent = TOTAL_LESSONS;
+  els.progressBar.setAttribute('aria-valuenow', String(pct));
+
+  els.ringValue.style.strokeDashoffset = String(RING_CIRC * (1 - pct / 100));
+  els.ringText.textContent = pct + '%';
+
+  els.yearProgress.innerHTML = YEARS.map(y => {
+    const s = yearStats(y);
+    const p = s.total ? Math.round((s.done / s.total) * 100) : 0;
+    return `<div class="year-progress__row">
+      <b>${y}.º</b>
+      <span class="year-progress__bar"><i style="width:${p}%"></i></span>
+      <span>${s.done}/${s.total}</span>
+    </div>`;
+  }).join('');
+
+  els.yearButtons.forEach(btn => {
+    const active = btn.dataset.year === String(state.yearFilter);
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
+  const next = firstPendingLesson();
+  if (done === 0) els.continueText.textContent = 'Comenzar el curso';
+  else if (done === TOTAL_LESSONS) els.continueText.textContent = '¡Curso completado! Repasar';
+  else els.continueText.textContent = `Continuar: ${next.id}`;
+}
+
+/* ---------------------------------------------------------
+   6) NAVEGACIÓN
+   --------------------------------------------------------- */
+function goTo(id) {
+  if (!getLesson(id)) return;
+  window.location.hash = '#leccion=' + encodeURIComponent(id);
+  closeMobileSidebar();
+}
+
+function route() {
+  const match = (window.location.hash || '').match(/leccion=([^&]+)/);
+  const id = match ? decodeURIComponent(match[1]) : null;
+
+  if (id && getLesson(id)) {
+    if (lessonStatus(id) === STATUS.PENDIENTE) {
+      state.status[id] = STATUS.CURSO;
+    }
+    state.lastLesson = id;
+    saveProgress();
+    renderLesson(id);
+    renderSidebar();
+  } else {
+    renderHero();
+    renderSidebar();
+  }
+}
+
+/* ---------------------------------------------------------
+   7) ACCIONES
+   --------------------------------------------------------- */
+function toggleComplete(id) {
+  if (!getLesson(id)) return;
+  if (lessonStatus(id) === STATUS.COMPLETADA) {
+    state.status[id] = STATUS.CURSO;
+    toast('Lección marcada como en curso.', 'info');
+  } else {
+    state.status[id] = STATUS.COMPLETADA;
+    toast('¡Lección completada! Buen trabajo.', 'ok');
+  }
+  saveProgress();
+  renderSidebar();
+  renderLesson(id);
+}
+
+function resetProgress() {
+  const ok = window.confirm(
+    '¿Seguro que quieres reiniciar TODO tu progreso?\n\n' +
+    'Se borrarán las lecciones completadas, tus apuntes y todas las planificaciones.\n\n' +
+    'Esta acción no se puede deshacer.'
+  );
+  if (!ok) return;
+
+  const theme = state.theme;
+  state = { ...defaultState(), theme };
+  saveProgress();
+  closeMobileSidebar();
+  window.location.hash = '';
+  renderSidebar();
+  renderHero();
+  toast('Progreso reiniciado. Puedes empezar de nuevo.', 'warn');
+}
+
+function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  saveProgress();
+}
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+}
+
+function toggleModule(modId) {
+  const i = state.collapsedModules.indexOf(modId);
+  if (i === -1) state.collapsedModules.push(modId);
+  else state.collapsedModules.splice(i, 1);
+  saveProgress();
+
+  const section = els.moduleList.querySelector(`.module[data-module="${modId}"]`);
+  if (section) {
+    const open = !state.collapsedModules.includes(modId);
+    section.dataset.open = String(open);
+    section.querySelector('.module__head').setAttribute('aria-expanded', String(open));
+  }
+}
+
+function setYearFilter(year) {
+  state.yearFilter = year;
+  saveProgress();
+  renderSidebar();
+  updateProgressUI();
+}
+
+async function copyCode(btn, codeId) {
+  const pre = document.getElementById(codeId);
+  if (!pre) return;
+  const text = pre.innerText;
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    }
+    const original = btn.innerHTML;
+    btn.classList.add('is-copied');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 12.5l5 5 11-11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg> ¡Copiado!';
+    toast('Código copiado al portapapeles.', 'ok');
+    setTimeout(() => { btn.innerHTML = original; btn.classList.remove('is-copied'); }, 2000);
+  } catch (err) {
+    toast('No se pudo copiar. Selecciona el código manualmente.', 'warn');
+  }
+}
+
+function toast(message, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast toast--${type}`;
+  el.setAttribute('role', 'status');
+  el.textContent = message;
+  els.toastRegion.appendChild(el);
+  setTimeout(() => {
+    el.classList.add('is-leaving');
+    el.addEventListener('animationend', () => el.remove(), { once: true });
+  }, 2600);
+}
+
+/* Sidebar responsive */
+const isMobile = () => window.matchMedia('(max-width: 980px)').matches;
+function openMobileSidebar() {
+  document.body.classList.add('sidebar-open');
+  els.overlay.hidden = false;
+  requestAnimationFrame(() => els.overlay.classList.add('is-visible'));
+  els.menuToggle.setAttribute('aria-expanded', 'true');
+}
+function closeMobileSidebar() {
+  if (!document.body.classList.contains('sidebar-open')) return;
+  document.body.classList.remove('sidebar-open');
+  els.overlay.classList.remove('is-visible');
+  setTimeout(() => { els.overlay.hidden = true; }, 250);
+  els.menuToggle.setAttribute('aria-expanded', 'false');
+}
+function toggleSidebar() {
+  if (isMobile()) {
+    document.body.classList.contains('sidebar-open') ? closeMobileSidebar() : openMobileSidebar();
+  } else {
+    const collapsed = document.body.classList.toggle('sidebar-collapsed');
+    els.menuToggle.setAttribute('aria-expanded', String(!collapsed));
+  }
+}
+
+/* ---------------------------------------------------------
+   8) EVENTOS
+   --------------------------------------------------------- */
+function saveField(field, lessonId, value) {
+  if (field === 'plan') state.plans[lessonId] = value;
+  else state.notes[lessonId] = value;
+  saveProgress();
+  const hint = document.getElementById('hint-' + field);
+  if (hint) { hint.classList.add('is-saved'); hint.textContent = '✓ Guardado'; }
+}
+
+function bindEvents() {
+  document.addEventListener('click', (e) => {
+    const copyBtn = e.target.closest('.code-block__copy');
+    if (copyBtn) { copyCode(copyBtn, copyBtn.dataset.copy); return; }
+
+    const moduleToggle = e.target.closest('[data-module-toggle]');
+    if (moduleToggle) { toggleModule(moduleToggle.dataset.moduleToggle); return; }
+
+    const yearBtn = e.target.closest('.year-filter__btn');
+    if (yearBtn) { setYearFilter(yearBtn.dataset.year); return; }
+
+    const lessonBtn = e.target.closest('[data-lesson]');
+    if (lessonBtn && !lessonBtn.disabled) {
+      if (lessonBtn.id === 'completeBtn') toggleComplete(lessonBtn.dataset.lesson);
+      else goTo(lessonBtn.dataset.lesson);
+      return;
+    }
+
+    const actionBtn = e.target.closest('[data-action="continue"]');
+    if (actionBtn) { goTo(firstPendingLesson().id); return; }
+  });
+
+  els.continueBtn.addEventListener('click', () => goTo(firstPendingLesson().id));
+  els.resetBtn.addEventListener('click', resetProgress);
+  els.themeToggle.addEventListener('click', toggleTheme);
+  els.menuToggle.addEventListener('click', toggleSidebar);
+  els.overlay.addEventListener('click', closeMobileSidebar);
+
+  window.addEventListener('hashchange', route);
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMobileSidebar(); });
+  window.addEventListener('resize', () => { if (!isMobile()) closeMobileSidebar(); });
+
+  // Autoguardado de apuntes y planificaciones
+  let timer = null;
+  document.addEventListener('input', (e) => {
+    const ta = e.target;
+    if (!ta.matches('textarea[data-field]')) return;
+    const field = ta.dataset.field;
+    const id = ta.dataset.lesson;
+    const hint = document.getElementById('hint-' + field);
+    if (hint) { hint.classList.remove('is-saved'); hint.textContent = 'Escribiendo…'; }
+    clearTimeout(timer);
+    timer = setTimeout(() => saveField(field, id, ta.value), 500);
+  });
+  document.addEventListener('blur', (e) => {
+    const ta = e.target;
+    if (!ta.matches('textarea[data-field]')) return;
+    saveField(ta.dataset.field, ta.dataset.lesson, ta.value);
+  }, true);
+}
+
+/* ---------------------------------------------------------
+   9) INICIALIZACIÓN
+   --------------------------------------------------------- */
+function init() {
+  loadProgress();
+  applyTheme();
+  renderSidebar();
+  bindEvents();
+  updateProgressUI();
+
+  if (isMobile()) els.menuToggle.setAttribute('aria-expanded', 'false');
+
+  route();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+  </script>
+</body>
+</html>
